@@ -344,8 +344,9 @@ def fwhm_width(ints,shape_a_o, da, do):
     #need to account for the if the peak is located on the edge of the angle spectra
     #we will just shift the peak to the center of the angle values
     ang_loc_max = np.where(ints_z==(ints_z).max())[1]
-    ang_shift = int(len(orients)/2.-ang_loc_max[0])
-        
+    #ang_shift = int(len(orients)/2.-ang_loc_max[0])
+    ang_shift = int(len(ints_o)/2.-ang_loc_max[0]) 
+    
     ints_z = np.roll(ints_z,ang_shift,axis=1)
 
     #threshold image based on the hieght of half of the peak
@@ -612,8 +613,8 @@ if __name__ == "__main__":
     src = 'C:/Users/tevid/Desktop/DNA_Origami/Code/TubeAnalysis/'
     
     img_fn = 'TubeSection2.png'
-    img_fn = '27.png'
-    img_fn = '6.png'
+    #img_fn = '27.png'
+    #img_fn = '6.png'
     image = pims.ImageSequence(src+img_fn)[0]
     
     '''
@@ -628,7 +629,7 @@ if __name__ == "__main__":
     rotate_img = ndim.rotate(thres_img,-minor_axis, reshape=1)
     rotate_img = threshold_image(rotate_img)
 
-    left, right, f_l, f_r = sides_location(rotate_img, np.shape(thres_img)[1]/2.)
+    left, right = sides_location(rotate_img, np.shape(thres_img)[1]/2.)
     
     tube_thickness = np.average(rotate_img,axis=0)
 
@@ -657,7 +658,7 @@ if __name__ == "__main__":
     ints = np.array(ints)
     
     shape_a_o = (len(a_s),len(orients))
-    popt, pcov = fit_gaussian(ints, shape_a_o)
+    popt, pcov = fit_gaussian(ints)
     
     print('fit parameters from Gaussian fit:')
     print('lattice spacing: ', popt[1])
